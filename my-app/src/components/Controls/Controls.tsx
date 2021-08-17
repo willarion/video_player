@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import play from '../../images/play.svg';
+import pause from '../../images/pause.svg';
 import stop from '../../images/stop.svg';
 import volume from '../../images/volume.svg';
 import fullscreen from '../../images/fullscreen.svg';
@@ -14,7 +15,6 @@ const progressBarHeight = '10px';
 
 const ProgressBar = styled.input`
   appearance: none;
-  background: none;
   height: ${progressBarHeight};
   overflow: hidden;
   width: 100%;
@@ -79,6 +79,10 @@ const PlayBtn = styled(Btn)`
   background-image: url(${play});
 `
 
+const PauseBtn = styled(Btn)`
+  background-image: url(${pause});
+`
+
 const StopBtn = styled(Btn)`
   background-image: url(${stop});
 `
@@ -98,15 +102,24 @@ const TimeDisplay = styled.span`
   opacity: 0.6;
 `
 
-export const Controls: React.FC = () => {
+interface ControlsProps {
+  handlePlayPause: () => void;
+  handleStop: () => void;
+  paused: boolean;
+  currentTime: string | null;
+  duration: string | null;
+}
+
+export const Controls: React.FC<ControlsProps> = ({ handlePlayPause, handleStop, paused, currentTime, duration}) => {
+  console.log(duration)
   return (
     <ControlsWrap>
       <ProgressBar type="range"  min="0" max="100" />
       <ButtonsWrap>
         <ControlsGroup>
-          <PlayBtn />
-          <StopBtn />
-          <TimeDisplay> / </TimeDisplay>
+          {paused ? <PlayBtn onClick={handlePlayPause} /> : <PauseBtn onClick={handlePlayPause} />}
+          <StopBtn onClick={handleStop} />
+          <TimeDisplay>{ currentTime ? currentTime : '00:00' } / { duration ? duration : '00:00' } </TimeDisplay>
         </ControlsGroup>
         <ControlsGroup>
           <VolumeBtn />
