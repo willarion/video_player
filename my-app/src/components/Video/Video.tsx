@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import styled from "styled-components";
-import {Controls} from "../Controls/Controls";
-import {calculateMinSec} from "../../utils/calculateMinSec";
+import { Controls } from "../Controls/Controls";
+import { calculateMinSec } from "../../utils/calculateMinSec";
 
 const VideoWrapper = styled.div`
   width: 60%;
@@ -92,6 +92,12 @@ export const Video: React.FC = () => {
     }
   }
 
+  const handleVideoRewind = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    if (vidRef.current) {
+      vidRef.current.currentTime = event.target.valueAsNumber;
+    }
+  }
+
   return (
     <VideoWrapper>
       <StyledVideo
@@ -108,11 +114,14 @@ export const Video: React.FC = () => {
         handleStop={handleStopVideo}
         paused={paused}
         currentTime={currentTime}
+        currentTimeInSec={ vidRef.current ? Math.floor(vidRef.current.currentTime) : 0 }
         duration={duration}
+        durationInSec={ vidRef.current ? Math.floor(vidRef.current.duration) : 1 }
         handleFullscreen={handleFullscreen}
         handleMuteState={handleMuteState}
         muted={muted}
         handleVolume={handleVolume}
+        handleVideoRewind={handleVideoRewind}
       />
     </VideoWrapper>
   )

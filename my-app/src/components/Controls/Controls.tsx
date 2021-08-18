@@ -124,18 +124,28 @@ interface ControlsProps {
   handleStop: () => void;
   paused: boolean;
   currentTime: string | null;
+  currentTimeInSec: number;
   duration: string | null;
+  durationInSec: number;
   handleFullscreen: () => void;
   handleMuteState: () => void;
   muted: boolean;
   handleVolume: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleVideoRewind: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const Controls: React.FC<ControlsProps> = ({ handlePlayPause, handleStop, paused, currentTime, duration, handleFullscreen, handleMuteState, muted, handleVolume }) => {
+export const Controls: React.FC<ControlsProps> = ({ handlePlayPause, handleStop, paused, currentTime, currentTimeInSec, duration, durationInSec, handleFullscreen, handleMuteState, muted, handleVolume, handleVideoRewind }) => {
 
   return (
     <ControlsWrap>
-      <ProgressBar type="range"  min="0" max="100" />
+      <ProgressBar
+        type="range"
+        min={0}
+        max={durationInSec}
+        step={1}
+        value={currentTimeInSec}
+        onChange={handleVideoRewind}
+      />
       <ButtonsWrap>
         <ControlsGroup>
           { paused ? <PlayBtn onClick={handlePlayPause} /> : <PauseBtn onClick={handlePlayPause} /> }
