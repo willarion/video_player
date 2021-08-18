@@ -81,6 +81,17 @@ export const Video: React.FC = () => {
     setMuted(!muted);
   }
 
+  const handleVolume = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    if (vidRef.current) {
+      vidRef.current.volume = event.target.valueAsNumber;
+      if (event.target.valueAsNumber === 0) {
+        setMuted(true);
+      } else {
+        setMuted(false);
+      }
+    }
+  }
+
   return (
     <VideoWrapper>
       <StyledVideo
@@ -101,6 +112,7 @@ export const Video: React.FC = () => {
         handleFullscreen={handleFullscreen}
         handleMuteState={handleMuteState}
         muted={muted}
+        handleVolume={handleVolume}
       />
     </VideoWrapper>
   )

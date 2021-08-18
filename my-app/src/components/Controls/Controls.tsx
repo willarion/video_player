@@ -88,12 +88,24 @@ const StopBtn = styled(Btn)`
   background-image: url(${stop});
 `
 
+const VolumeBlock = styled.div`
+  display: flex
+`
+
 const VolumeBtn = styled(Btn)`
   background-image: url(${volume});
 `
 
 const MutedBtn = styled(Btn)`
   background-image: url(${muted});
+`
+
+const VolumeBar = styled.input`
+  margin: 0 3px;
+  display: none;
+  ${VolumeBlock}:hover & {
+    display: block;
+  } 
 `
 
 const FullscreenBtn = styled(Btn)`
@@ -116,21 +128,31 @@ interface ControlsProps {
   handleFullscreen: () => void;
   handleMuteState: () => void;
   muted: boolean;
+  handleVolume: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const Controls: React.FC<ControlsProps> = ({ handlePlayPause, handleStop, paused, currentTime, duration, handleFullscreen, handleMuteState, muted }) => {
+export const Controls: React.FC<ControlsProps> = ({ handlePlayPause, handleStop, paused, currentTime, duration, handleFullscreen, handleMuteState, muted, handleVolume }) => {
 
   return (
     <ControlsWrap>
       <ProgressBar type="range"  min="0" max="100" />
       <ButtonsWrap>
         <ControlsGroup>
-          {paused ? <PlayBtn onClick={handlePlayPause} /> : <PauseBtn onClick={handlePlayPause} />}
+          { paused ? <PlayBtn onClick={handlePlayPause} /> : <PauseBtn onClick={handlePlayPause} /> }
           <StopBtn onClick={handleStop} />
           <TimeDisplay>{ currentTime ? currentTime : '00:00' } / { duration ? duration : '00:00' } </TimeDisplay>
         </ControlsGroup>
         <ControlsGroup>
-          {muted ? <VolumeBtn onClick={handleMuteState} /> : <MutedBtn onClick={handleMuteState} />}
+          <VolumeBlock>
+            <VolumeBar
+              type="range"
+              min={0}
+              max={1}
+              step={0.02}
+              onChange={handleVolume}
+            />
+            { muted ? <MutedBtn onClick={handleMuteState} /> : <VolumeBtn onClick={handleMuteState} /> }
+          </VolumeBlock>
           <FullscreenBtn onClick={handleFullscreen} />
         </ControlsGroup>
       </ButtonsWrap>
