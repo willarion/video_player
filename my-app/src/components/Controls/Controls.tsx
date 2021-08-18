@@ -3,25 +3,35 @@ import styled from 'styled-components';
 import play from '../../images/play.svg';
 import pause from '../../images/pause.svg';
 import stop from '../../images/stop.svg';
-import volume from '../../images/volume.svg';
-import muted from '../../images/muted.svg';
+import volumeBtn from '../../images/volumeBtn.svg';
+import mutedBtn from '../../images/mutedBtn.svg';
 import fullscreen from '../../images/fullscreen.svg';
 import {calculateCurrentPercent} from "../../utils/calculateCurrentPercent";
+
+interface BtnBackgroundImageProp {
+  background: string;
+}
+
+interface RangeGradientProp {
+  percent: number;
+}
+
+const progressBarHeight = '10px';
 
 const ControlsWrap = styled.div`
   display: flex;
   flex-direction: column;
 `
 
-const progressBarHeight = '10px';
-
-const ProgressBar = styled.input`
+const ProgressBar = styled.input.attrs({
+  type: "range"
+})<RangeGradientProp>`
   appearance: none;
   height: ${progressBarHeight};
   overflow: hidden;
   width: 100%;
-  //background: linear-gradient(to right, red 0%, red 0%, #878585 0%, #878585 100%);
   margin: 0;
+  background: linear-gradient(to right, red 0%, red ${props => props.percent}%, #878585 ${props => props.percent}%, #878585 100%);
 
   &::-webkit-slider-thumb {
     height: ${progressBarHeight};
@@ -57,37 +67,26 @@ const ControlsGroup = styled.div`
   justify-content: space-between;
 `
 
-const Btn = styled.button`
+const Btn = styled.button<BtnBackgroundImageProp>`
   width: 1.5rem;
   height: 1.5rem;
   padding: 0;
   border: none;
-  background: transparent no-repeat;
   outline: none;
   background-size: 1.5rem 1.5rem;
   cursor: pointer;
   opacity: 1;
   transition: opacity 0.3s ease;
   margin-right: 5px;
-  background-position: center;
-  &:last-child{
+  background:  ${props => `url(${props.background}) transparent no-repeat center`};
+
+  &:last-child {
     margin-right: 0;
   }
-  &:hover{
+
+  &:hover {
     opacity: .7;
   }
-`
-
-const PlayBtn = styled(Btn)`
-  background-image: url(${play});
-`
-
-const PauseBtn = styled(Btn)`
-  background-image: url(${pause});
-`
-
-const StopBtn = styled(Btn)`
-  background-image: url(${stop});
 `
 
 const VolumeBlock = styled.div`
@@ -96,21 +95,16 @@ const VolumeBlock = styled.div`
   margin-right: 5px;
 `
 
-const VolumeBtn = styled(Btn)`
-  background-image: url(${volume});
-`
-
-const MutedBtn = styled(Btn)`
-  background-image: url(${muted});
-`
-
-const VolumeBar = styled.input`
+const VolumeBar = styled.input.attrs({
+  type: "range"
+})<RangeGradientProp>`
   margin: 0 5px;
   display: none;
   appearance: none;
   height: 5px;
   overflow: hidden;
   width: 80%;
+  background: linear-gradient(to right, #dd5e5e 0%, #dd5e5e ${props => props.percent}%, #878585 ${props => props.percent}%, #878585 100%);
 
   ${VolumeBlock}:hover & {
     display: block;
@@ -176,34 +170,33 @@ export const Controls: React.FC<ControlsProps> = ({ handlePlayPause, handleStop,
   return (
     <ControlsWrap>
       <ProgressBar
-        type="range"
         min={0}
         max={durationInSec}
         step={1}
         value={currentTimeInSec}
         onChange={handleVideoRewind}
-        style={{background: `linear-gradient(to right, red 0%, red ${timePercent}%, #878585 ${timePercent}%, #878585 100%)`}}
+        percent={timePercent}
       />
       <ButtonsWrap>
         <ControlsGroup>
-          { paused ? <PlayBtn onClick={handlePlayPause} /> : <PauseBtn onClick={handlePlayPause} /> }
-          <StopBtn onClick={handleStop} />
+          <Btn onClick={handlePlayPause} background={paused ? play : pause} />
+          <Btn onClick={handleStop} background={stop} />
           <TimeDisplay>{ currentTime ? currentTime : '00:00' } / { duration ? duration : '00:00' } </TimeDisplay>
         </ControlsGroup>
         <ControlsGroup>
           <VolumeBlock>
             <VolumeBar
-              type="range"
               min={0}
               max={1}
               step={0.02}
               value={volume}
               onChange={handleVolume}
+              percent={volumePercent}
               style={{background:` linear-gradient(to right, #dd5e5e 0%, #dd5e5e ${volumePercent}%, #878585 ${volumePercent}%, #878585 100%)`}}
             />
-            { muted ? <MutedBtn onClick={handleMuteState} /> : <VolumeBtn onClick={handleMuteState} /> }
+            <Btn onClick={handleMuteState} background={ muted ? mutedBtn : volumeBtn } />
           </VolumeBlock>
-          <FullscreenBtn onClick={handleFullscreen} />
+          <Btn onClick={handleFullscreen} background={fullscreen} />
         </ControlsGroup>
       </ButtonsWrap>
     </ControlsWrap>
