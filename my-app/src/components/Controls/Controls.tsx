@@ -4,6 +4,7 @@ import play from '../../images/play.svg';
 import pause from '../../images/pause.svg';
 import stop from '../../images/stop.svg';
 import volume from '../../images/volume.svg';
+import muted from '../../images/muted.svg';
 import fullscreen from '../../images/fullscreen.svg';
 
 const ControlsWrap = styled.div`
@@ -91,6 +92,10 @@ const VolumeBtn = styled(Btn)`
   background-image: url(${volume});
 `
 
+const MutedBtn = styled(Btn)`
+  background-image: url(${muted});
+`
+
 const FullscreenBtn = styled(Btn)`
   background-image: url(${fullscreen});
 `
@@ -108,11 +113,13 @@ interface ControlsProps {
   paused: boolean;
   currentTime: string | null;
   duration: string | null;
-  fullscreen: () => void;
+  handleFullscreen: () => void;
+  handleMuteState: () => void;
+  muted: boolean;
 }
 
-export const Controls: React.FC<ControlsProps> = ({ handlePlayPause, handleStop, paused, currentTime, duration, fullscreen }) => {
-  console.log(duration)
+export const Controls: React.FC<ControlsProps> = ({ handlePlayPause, handleStop, paused, currentTime, duration, handleFullscreen, handleMuteState, muted }) => {
+
   return (
     <ControlsWrap>
       <ProgressBar type="range"  min="0" max="100" />
@@ -123,8 +130,8 @@ export const Controls: React.FC<ControlsProps> = ({ handlePlayPause, handleStop,
           <TimeDisplay>{ currentTime ? currentTime : '00:00' } / { duration ? duration : '00:00' } </TimeDisplay>
         </ControlsGroup>
         <ControlsGroup>
-          <VolumeBtn />
-          <FullscreenBtn onClick={fullscreen} />
+          {muted ? <VolumeBtn onClick={handleMuteState} /> : <MutedBtn onClick={handleMuteState} />}
+          <FullscreenBtn onClick={handleFullscreen} />
         </ControlsGroup>
       </ButtonsWrap>
     </ControlsWrap>

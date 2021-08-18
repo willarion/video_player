@@ -1,5 +1,4 @@
 export const calculateMinSec = (time: number): string => {
-  console.log(time)
   let minutes = Math.floor(time / 60);
   let seconds = Math.floor(time - minutes * 60);
   let minuteValue;

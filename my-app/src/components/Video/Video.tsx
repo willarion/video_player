@@ -29,6 +29,7 @@ export const Video: React.FC = () => {
   const [paused, setPaused] = useState(true);
   const [currentTime, setCurrentTime] = useState<string | null>(null);
   const [duration, setDuration] = useState<string | null>(null);
+  const [muted, setMuted] = useState<boolean>(false);
 
   const handlePlayPauseVideo = (): void => {
     if (vidRef.current) {
@@ -65,8 +66,19 @@ export const Video: React.FC = () => {
 
   const handleFullscreen = (): void => {
     if (vidRef.current) {
-      vidRef.current.requestFullscreen();
+      if (vidRef.current.requestFullscreen) {
+        vidRef.current.requestFullscreen();
+      } else { // @ts-ignore
+        if (vidRef.current.webkitRequestFullscreen) { /* Safari */
+                // @ts-ignore
+          vidRef.current.webkitRequestFullscreen();
+        }
+      }
     }
+  }
+
+  const handleMuteState = (): void => {
+    setMuted(!muted);
   }
 
   return (
@@ -75,6 +87,7 @@ export const Video: React.FC = () => {
         ref={vidRef}
         onTimeUpdate={handleTime}
         onLoadedData={handleDuration}
+        muted={muted}
       >
         <source src="https://s3-eu-west-1.amazonaws.com/onrewind-test-bucket/big_buck_bunny.mp4" type="video/mp4" />
         Your browser does not support HTML video.
@@ -85,7 +98,9 @@ export const Video: React.FC = () => {
         paused={paused}
         currentTime={currentTime}
         duration={duration}
-        fullscreen={handleFullscreen}
+        handleFullscreen={handleFullscreen}
+        handleMuteState={handleMuteState}
+        muted={muted}
       />
     </VideoWrapper>
   )
