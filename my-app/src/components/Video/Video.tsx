@@ -17,7 +17,7 @@ const VideoWrapper = styled.div`
   @media (max-width: 360px) {
     width: 100%;
   }
-  box-shadow: 0px 0px 10px 1px rgb(3 6 8);
+  box-shadow: 0 0 10px 1px rgb(3 6 8);
 `
 const StyledVideo = styled.video`
   width: 100%;

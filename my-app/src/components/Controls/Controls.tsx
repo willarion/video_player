@@ -110,11 +110,12 @@ const VolumeBar = styled.input`
   appearance: none;
   height: 5px;
   overflow: hidden;
-  width: 100%;
-  
+  width: 80%;
+
   ${VolumeBlock}:hover & {
     display: block;
   }
+
   &::-webkit-slider-thumb {
     height: 5px;
     width: 5px;
@@ -198,7 +199,7 @@ export const Controls: React.FC<ControlsProps> = ({ handlePlayPause, handleStop,
               step={0.02}
               value={volume}
               onChange={handleVolume}
-              style={{background:` linear-gradient(to right, #d7d7d7 0%, #d7d7d7 ${volumePercent}%, #878585 ${volumePercent}%, #878585 100%)`}}
+              style={{background:` linear-gradient(to right, #dd5e5e 0%, #dd5e5e ${volumePercent}%, #878585 ${volumePercent}%, #878585 100%)`}}
             />
             { muted ? <MutedBtn onClick={handleMuteState} /> : <VolumeBtn onClick={handleMuteState} /> }
           </VolumeBlock>
