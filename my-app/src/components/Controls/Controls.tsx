@@ -108,9 +108,10 @@ interface ControlsProps {
   paused: boolean;
   currentTime: string | null;
   duration: string | null;
+  fullscreen: () => void;
 }
 
-export const Controls: React.FC<ControlsProps> = ({ handlePlayPause, handleStop, paused, currentTime, duration}) => {
+export const Controls: React.FC<ControlsProps> = ({ handlePlayPause, handleStop, paused, currentTime, duration, fullscreen }) => {
   console.log(duration)
   return (
     <ControlsWrap>
@@ -123,7 +124,7 @@ export const Controls: React.FC<ControlsProps> = ({ handlePlayPause, handleStop,
         </ControlsGroup>
         <ControlsGroup>
           <VolumeBtn />
-          <FullscreenBtn />
+          <FullscreenBtn onClick={fullscreen} />
         </ControlsGroup>
       </ButtonsWrap>
     </ControlsWrap>

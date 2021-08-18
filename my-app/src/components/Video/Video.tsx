@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useRef, useState } from 'react';
 import styled from "styled-components";
 import {Controls} from "../Controls/Controls";
 import {calculateMinSec} from "../../utils/calculateMinSec";
@@ -63,6 +63,12 @@ export const Video: React.FC = () => {
     }
   }
 
+  const handleFullscreen = (): void => {
+    if (vidRef.current) {
+      vidRef.current.requestFullscreen();
+    }
+  }
+
   return (
     <VideoWrapper>
       <StyledVideo
@@ -79,6 +85,7 @@ export const Video: React.FC = () => {
         paused={paused}
         currentTime={currentTime}
         duration={duration}
+        fullscreen={handleFullscreen}
       />
     </VideoWrapper>
   )
