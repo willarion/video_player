@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import play from '../../images/play.svg';
 import pause from '../../images/pause.svg';
@@ -6,6 +6,7 @@ import stop from '../../images/stop.svg';
 import volume from '../../images/volume.svg';
 import muted from '../../images/muted.svg';
 import fullscreen from '../../images/fullscreen.svg';
+import {calculateCurrentPercent} from "../../utils/calculateCurrentPercent";
 
 const ControlsWrap = styled.div`
   display: flex;
@@ -19,7 +20,7 @@ const ProgressBar = styled.input`
   height: ${progressBarHeight};
   overflow: hidden;
   width: 100%;
-  background: linear-gradient(to right, red 0%, red 0%, #878585 0%, #878585 100%);
+  //background: linear-gradient(to right, red 0%, red 0%, #878585 0%, #878585 100%);
   margin: 0;
 
   &::-webkit-slider-thumb {
@@ -63,11 +64,12 @@ const Btn = styled.button`
   border: none;
   background: transparent no-repeat;
   outline: none;
-  background-size: contain;
+  background-size: 1.5rem 1.5rem;
   cursor: pointer;
   opacity: 1;
   transition: opacity 0.3s ease;
   margin-right: 5px;
+  background-position: center;
   &:last-child{
     margin-right: 0;
   }
@@ -89,7 +91,9 @@ const StopBtn = styled(Btn)`
 `
 
 const VolumeBlock = styled.div`
-  display: flex
+  display: flex;
+  align-items: center;
+  margin-right: 5px;
 `
 
 const VolumeBtn = styled(Btn)`
@@ -101,11 +105,31 @@ const MutedBtn = styled(Btn)`
 `
 
 const VolumeBar = styled.input`
-  margin: 0 3px;
+  margin: 0 5px;
   display: none;
+  appearance: none;
+  height: 5px;
+  overflow: hidden;
+  width: 100%;
+  
   ${VolumeBlock}:hover & {
     display: block;
-  } 
+  }
+  &::-webkit-slider-thumb {
+    height: 5px;
+    width: 5px;
+    appearance: none;
+    background: white;
+    border-radius: 50%;
+  }
+
+  &::-moz-range-thumb {
+    height: 5px;
+    width: 5px;
+    background: white;
+    border-radius: 50%;
+    position: relative;
+  }
 `
 
 const FullscreenBtn = styled(Btn)`
@@ -131,10 +155,22 @@ interface ControlsProps {
   handleMuteState: () => void;
   muted: boolean;
   handleVolume: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  volume: number;
   handleVideoRewind: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const Controls: React.FC<ControlsProps> = ({ handlePlayPause, handleStop, paused, currentTime, currentTimeInSec, duration, durationInSec, handleFullscreen, handleMuteState, muted, handleVolume, handleVideoRewind }) => {
+export const Controls: React.FC<ControlsProps> = ({ handlePlayPause, handleStop, paused, currentTime, currentTimeInSec, duration, durationInSec, handleFullscreen, handleMuteState, muted, handleVolume, volume, handleVideoRewind }) => {
+
+  const [timePercent, setTimePercent] = useState(0);
+  const [volumePercent, setVolumePercent] = useState(0);
+
+  useEffect(() => {
+    setTimePercent(calculateCurrentPercent(currentTimeInSec, durationInSec))
+  }, [currentTimeInSec, durationInSec]);
+
+  useEffect(() => {
+    setVolumePercent(calculateCurrentPercent(volume, 1))
+  }, [volume]);
 
   return (
     <ControlsWrap>
@@ -145,6 +181,7 @@ export const Controls: React.FC<ControlsProps> = ({ handlePlayPause, handleStop,
         step={1}
         value={currentTimeInSec}
         onChange={handleVideoRewind}
+        style={{background: `linear-gradient(to right, red 0%, red ${timePercent}%, #878585 ${timePercent}%, #878585 100%)`}}
       />
       <ButtonsWrap>
         <ControlsGroup>
@@ -159,7 +196,9 @@ export const Controls: React.FC<ControlsProps> = ({ handlePlayPause, handleStop,
               min={0}
               max={1}
               step={0.02}
+              value={volume}
               onChange={handleVolume}
+              style={{background:` linear-gradient(to right, #d7d7d7 0%, #d7d7d7 ${volumePercent}%, #878585 ${volumePercent}%, #878585 100%)`}}
             />
             { muted ? <MutedBtn onClick={handleMuteState} /> : <VolumeBtn onClick={handleMuteState} /> }
           </VolumeBlock>

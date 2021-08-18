@@ -29,7 +29,8 @@ export const Video: React.FC = () => {
   const [paused, setPaused] = useState(true);
   const [currentTime, setCurrentTime] = useState<string | null>(null);
   const [duration, setDuration] = useState<string | null>(null);
-  const [muted, setMuted] = useState<boolean>(false);
+  const [muted, setMuted] = useState(false);
+  const [volume,setVolume] = useState(1);
 
   const handlePlayPauseVideo = (): void => {
     if (vidRef.current) {
@@ -80,10 +81,11 @@ export const Video: React.FC = () => {
   const handleMuteState = (): void => {
     setMuted(!muted);
   }
-
+  
   const handleVolume = (event: React.ChangeEvent<HTMLInputElement>): void => {
     if (vidRef.current) {
       vidRef.current.volume = event.target.valueAsNumber;
+      setVolume(vidRef.current.volume);
       if (event.target.valueAsNumber === 0) {
         setMuted(true);
       } else {
@@ -97,6 +99,7 @@ export const Video: React.FC = () => {
       vidRef.current.currentTime = event.target.valueAsNumber;
     }
   }
+
 
   return (
     <VideoWrapper>
@@ -121,6 +124,7 @@ export const Video: React.FC = () => {
         handleMuteState={handleMuteState}
         muted={muted}
         handleVolume={handleVolume}
+        volume={volume}
         handleVideoRewind={handleVideoRewind}
       />
     </VideoWrapper>
