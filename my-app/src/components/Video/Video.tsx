@@ -1,9 +1,11 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useRef } from 'react';
 import styled from "styled-components";
 import { Controls } from "../Controls/Controls";
-import {useDispatch, useSelector} from "react-redux";
-import {ActionCreators, State} from "../../state";
-import {bindActionCreators} from "redux";
+import { useDispatch } from "react-redux";
+import { ActionCreators } from "../../state";
+import { bindActionCreators } from "redux";
+import { useMuteVideo } from "../../hooks/useMuteVideo";
+import { usePlayPauseStopVideo } from "../../hooks/usePlayPauseStopVideo";
 
 const VideoWrapper = styled.div`
   width: 60%;
@@ -28,35 +30,13 @@ const StyledVideo = styled.video`
 `
 
 export const Video: React.FC = () => {
-  const vidRef = useRef<HTMLVideoElement>(null);
-  const [paused, setPaused] = useState(true);
-  const [muted, setMuted] = useState(false);
-
-  const state = useSelector((state: State) => state.settings);
   const dispatch = useDispatch();
   const { measureDuration, rewindVideo } = bindActionCreators(ActionCreators, dispatch);
 
+  const vidRef = useRef<HTMLVideoElement>(null);
 
-  const handlePlayPauseVideo = (): void => {
-    if (vidRef.current) {
-      if (vidRef.current.paused) {
-        vidRef.current.play();
-        setPaused(false);
-      }
-      else {
-        vidRef.current.pause();
-        setPaused(true);
-      }
-    }
-  }
-
-  const handleStopVideo = (): void =>  {
-    if (vidRef.current) {
-      vidRef.current.pause();
-      vidRef.current.currentTime = 0;
-      setPaused(true);
-    }
-  }
+  const { muted, handleMuteState } = useMuteVideo();
+  const { paused, handlePlayPauseVideo, handleStopVideo } = usePlayPauseStopVideo(vidRef);
 
   const handleDuration = (): void => {
     if (vidRef.current) {
@@ -64,40 +44,15 @@ export const Video: React.FC = () => {
     }
   }
 
-  const handleFullscreen = (): void => {
+  const handleTime = (): void => {
     if (vidRef.current) {
-      if (vidRef.current.requestFullscreen) {
-        vidRef.current.requestFullscreen();
-      } else { // @ts-ignore
-        if (vidRef.current.webkitRequestFullscreen) { /* Safari */
-                // @ts-ignore
-          vidRef.current.webkitRequestFullscreen();
-        }
-      }
+      rewindVideo(Math.floor(vidRef.current.currentTime));
     }
-  }
-
-  const handleMuteState = (): void => {
-    setMuted(!muted);
   }
 
   const handleVolume = (value: number): void => {
     if (vidRef.current) {
       vidRef.current.volume = value;
-    }
-  }
-
-  useEffect(() => {
-    if (state.volume === 0) {
-      setMuted(true);
-    } else {
-      setMuted(false);
-    }
-  }, [state.volume])
-
-  const handleTime = (): void => {
-    if (vidRef.current) {
-      rewindVideo(Math.floor(vidRef.current.currentTime));
     }
   }
 
@@ -107,6 +62,18 @@ export const Video: React.FC = () => {
     }
   }
 
+  const handleFullscreen = (): void => {
+    if (vidRef.current) {
+      if (vidRef.current.requestFullscreen) {
+        vidRef.current.requestFullscreen();
+      } else {// @ts-ignore
+        if (vidRef.current.webkitRequestFullscreen) { /* Safari */
+          // @ts-ignore
+          vidRef.current.webkitRequestFullscreen();
+        }
+      }
+    }
+  }
 
   return (
     <VideoWrapper>
