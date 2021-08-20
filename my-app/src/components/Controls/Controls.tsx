@@ -12,37 +12,44 @@ import {Button} from "../Button/Button";
 import {VolumeBlock} from "../VolumeBlock/VolumeBlock"
 import {ControlsProps} from "../../models/ControlsProps";
 import {useBarColor} from "../../hooks/useBarColor";
+import {useDispatch, useSelector} from "react-redux";
+import {ActionCreators, State} from "../../state";
+import {bindActionCreators} from "redux";
 
 const ControlsWrap = styled.div`
   display: flex;
   flex-direction: column;
 `
 
-export const Controls: React.FC<ControlsProps> = ({ handlePlayPause, handleStop, paused, currentTime, currentTimeInSec, duration, durationInSec, handleFullscreen, handleMuteState, muted, handleVolume, volume, handleVideoRewind }) => {
+export const Controls: React.FC<ControlsProps> = ({ handlePlayPause, handleStop, paused, handleFullscreen, handleMuteState, muted, handleVolume, handleVideoRewind }) => {
 
-  const maxVolume = 1;
+  const dispatch = useDispatch();
+  const { rewindVideo } = bindActionCreators(ActionCreators, dispatch);
+  const state = useSelector((state: State) => state.settings);
 
-  const timePercent = useBarColor(currentTimeInSec, durationInSec);
-  const volumePercent = useBarColor(volume, maxVolume);
+  const timePercent = useBarColor(state.time, state.duration.seconds);
 
   return (
     <ControlsWrap>
       <ProgressBar
         min="0"
-        max={durationInSec}
+        max={state.duration.seconds}
         step="1"
-        value={currentTimeInSec}
-        onChange={handleVideoRewind}
+        value={state.time}
+        onChange={(event) => {
+          rewindVideo(event.target.valueAsNumber);
+          handleVideoRewind(event.target.valueAsNumber);
+        }}
         percent={timePercent}
       />
       <ButtonsWrap>
         <ControlsGroup>
           <Button onClick={handlePlayPause} background={paused ? play : pause} />
           <Button onClick={handleStop} background={stop} />
-          <TimeDisplay currentTime={currentTime} duration={duration} />
+          <TimeDisplay />
         </ControlsGroup>
         <ControlsGroup>
-          <VolumeBlock volume={volume} handleVolume={handleVolume} volumePercent={volumePercent} handleMuteState={handleMuteState} muted={muted} maxVolume={maxVolume} />
+          <VolumeBlock handleVolume={handleVolume} handleMuteState={handleMuteState} muted={muted} />
           <Button onClick={handleFullscreen} background={fullscreen} />
         </ControlsGroup>
       </ButtonsWrap>

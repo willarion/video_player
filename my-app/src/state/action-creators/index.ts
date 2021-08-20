@@ -11,14 +11,20 @@ export const setVolume = (volume: number) => {
   }
 }
 
-export const rewindVideo = (caption: string, seconds: number) => {
+export const rewindVideo = (seconds: number) => {
   return (dispatch: Dispatch<Action>) => {
     dispatch({
       type: ActionType.REWIND,
-      payload: {
-        caption: caption,
-        seconds: seconds,
-      }
+      payload: seconds
+    })
+  }
+}
+
+export const measureDuration = (duration: number) => {
+  return (dispatch: Dispatch<Action>) => {
+    dispatch({
+      type: ActionType.SET_DURATION,
+      payload: duration
     })
   }
 }

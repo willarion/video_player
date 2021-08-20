@@ -5,6 +5,11 @@ import {Button} from "../Button/Button";
 import mutedBtn from "../../images/mutedBtn.svg";
 import volumeBtn from "../../images/volumeBtn.svg";
 import {ControlsProps} from "../../models/ControlsProps";
+import {useDispatch, useSelector} from "react-redux";
+import {bindActionCreators} from "redux";
+import {ActionCreators, State} from "../../state";
+import {useBarColor} from "../../hooks/useBarColor";
+import {maxVolume} from "../../utils/constants/constants";
 
 const StyledVolumeBlock = styled.div`
   display: flex;
@@ -44,16 +49,26 @@ const VolumeBar = styled.input.attrs({
   }
 `
 
-export const VolumeBlock: React.FC<Partial<ControlsProps>> = ({volume, handleVolume, volumePercent, handleMuteState, muted, maxVolume}) => {
+export const VolumeBlock: React.FC<Partial<ControlsProps>> = ({ handleVolume, handleMuteState, muted, }) => {
+
+  const dispatch = useDispatch();
+  const { setVolume } = bindActionCreators(ActionCreators, dispatch);
+  const state = useSelector((state: State) => state.settings);
+
   return (
     <StyledVolumeBlock>
       <VolumeBar
         min="0"
         max={maxVolume}
         step="0.02"
-        value={volume}
-        onChange={handleVolume}
-        percent={volumePercent}
+        value={state.volume}
+        onChange={(event) => {
+          setVolume(event.target.valueAsNumber);
+          if (handleVolume) {
+            handleVolume(event.target.valueAsNumber);
+          }
+        }}
+        percent={useBarColor(state.volume, maxVolume)}
       />
       <Button onClick={handleMuteState} background={ muted ? mutedBtn : volumeBtn } />
     </StyledVolumeBlock>

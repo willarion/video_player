@@ -1,7 +1,9 @@
-import React, { useRef, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import styled from "styled-components";
 import { Controls } from "../Controls/Controls";
-import { calculateMinSec } from "../../utils/calculateMinSec";
+import {useDispatch, useSelector} from "react-redux";
+import {ActionCreators, State} from "../../state";
+import {bindActionCreators} from "redux";
 
 const VideoWrapper = styled.div`
   width: 60%;
@@ -28,10 +30,12 @@ const StyledVideo = styled.video`
 export const Video: React.FC = () => {
   const vidRef = useRef<HTMLVideoElement>(null);
   const [paused, setPaused] = useState(true);
-  const [currentTime, setCurrentTime] = useState<string | null>(null);
-  const [duration, setDuration] = useState<string | null>(null);
   const [muted, setMuted] = useState(false);
-  const [volume,setVolume] = useState(1);
+
+  const state = useSelector((state: State) => state.settings);
+  const dispatch = useDispatch();
+  const { measureDuration, rewindVideo } = bindActionCreators(ActionCreators, dispatch);
+
 
   const handlePlayPauseVideo = (): void => {
     if (vidRef.current) {
@@ -54,15 +58,9 @@ export const Video: React.FC = () => {
     }
   }
 
-  const handleTime = (): void => {
-    if (vidRef.current) {
-      setCurrentTime(calculateMinSec(vidRef.current.currentTime));
-    }
-  }
-
   const handleDuration = (): void => {
     if (vidRef.current) {
-      setDuration(calculateMinSec(vidRef.current.duration));
+      measureDuration(Math.floor(vidRef.current.duration));
     }
   }
 
@@ -82,24 +80,33 @@ export const Video: React.FC = () => {
   const handleMuteState = (): void => {
     setMuted(!muted);
   }
-  
-  const handleVolume = (event: React.ChangeEvent<HTMLInputElement>): void => {
+
+  const handleVolume = (value: number): void => {
     if (vidRef.current) {
-      vidRef.current.volume = event.target.valueAsNumber;
-      setVolume(vidRef.current.volume);
-      if (event.target.valueAsNumber === 0) {
-        setMuted(true);
-      } else {
-        setMuted(false);
-      }
+      vidRef.current.volume = value;
     }
   }
 
-  const handleVideoRewind = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  useEffect(() => {
+    if (state.volume === 0) {
+      setMuted(true);
+    } else {
+      setMuted(false);
+    }
+  }, [state.volume])
+
+  const handleTime = (): void => {
     if (vidRef.current) {
-      vidRef.current.currentTime = event.target.valueAsNumber;
+      rewindVideo(Math.floor(vidRef.current.currentTime));
     }
   }
+
+  const handleVideoRewind = (value: number): void => {
+    if (vidRef.current) {
+      vidRef.current.currentTime = value;
+    }
+  }
+
 
   return (
     <VideoWrapper>
@@ -116,15 +123,10 @@ export const Video: React.FC = () => {
         handlePlayPause={handlePlayPauseVideo}
         handleStop={handleStopVideo}
         paused={paused}
-        currentTime={currentTime}
-        currentTimeInSec={ vidRef.current ? Math.floor(vidRef.current.currentTime) : 0 }
-        duration={duration}
-        durationInSec={ vidRef.current ? Math.floor(vidRef.current.duration) : 1 }
         handleFullscreen={handleFullscreen}
         handleMuteState={handleMuteState}
         muted={muted}
         handleVolume={handleVolume}
-        volume={volume}
         handleVideoRewind={handleVideoRewind}
       />
     </VideoWrapper>

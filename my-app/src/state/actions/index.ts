@@ -7,10 +7,12 @@ interface SetVolume {
 
 interface Rewind {
   type: ActionType.REWIND;
-  payload: {
-    caption: string;
-    seconds: number;
-  }
+  payload: number
 }
 
-export type Action = SetVolume | Rewind;
+interface SetDuration {
+  type: ActionType.SET_DURATION;
+  payload: number
+}
+
+export type Action = SetVolume | Rewind | SetDuration;

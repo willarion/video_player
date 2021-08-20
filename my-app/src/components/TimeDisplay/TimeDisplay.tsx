@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import {TimeDisplayProps} from "../../models/TimeDisplayProps";
+import {useSelector} from "react-redux";
+import {State} from "../../state";
+import {calculateMinSec} from "../../utils/calculateMinSec";
 
 const StyledTimeDisplay = styled.span`
   color: white;
@@ -9,8 +11,12 @@ const StyledTimeDisplay = styled.span`
   opacity: 0.6;
 `
 
-export const TimeDisplay: React.FC<TimeDisplayProps> = ({currentTime, duration}) => {
+export const TimeDisplay: React.FC = () => {
+
+  const state = useSelector((state: State) => state.settings);
+
+
   return (
-    <StyledTimeDisplay>{ currentTime ? currentTime : '00:00' } / { duration ? duration : '00:00' } </StyledTimeDisplay>
+    <StyledTimeDisplay>{ calculateMinSec(state.time) } / { state.duration.caption } </StyledTimeDisplay>
   )
 }
