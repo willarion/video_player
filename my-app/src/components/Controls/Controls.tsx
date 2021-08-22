@@ -4,17 +4,17 @@ import play from '../../images/play.svg';
 import pause from '../../images/pause.svg';
 import stop from '../../images/stop.svg';
 import fullscreen from '../../images/fullscreen.svg';
-import {ProgressBar} from "../ProgressBar/ProgressBar";
-import {ButtonsWrap} from "../ButtonsWrap/ButtonsWrap";
-import {ControlsGroup} from "../ControlsGroup/ControlsGroup";
-import {TimeDisplay} from "../TimeDisplay/TimeDisplay";
-import {Button} from "../Button/Button";
-import {VolumeBlock} from "../VolumeBlock/VolumeBlock"
-import {ControlsProps} from "../../models/ControlsProps";
-import {useBarColor} from "../../hooks/useBarColor";
-import {useDispatch, useSelector} from "react-redux";
-import {ActionCreators, State} from "../../state";
-import {bindActionCreators} from "redux";
+import { ProgressBar } from "../ProgressBar/ProgressBar";
+import { ButtonsWrap } from "../ButtonsWrap/ButtonsWrap";
+import { ControlsGroup } from "../ControlsGroup/ControlsGroup";
+import { TimeDisplay } from "../TimeDisplay/TimeDisplay";
+import { Button } from "../Button/Button";
+import { VolumeBlock } from "../VolumeBlock/VolumeBlock"
+import { ControlsProps } from "../../models/ControlsProps";
+import { useBarColor } from "../../hooks/useBarColor";
+import { useDispatch, useSelector } from "react-redux";
+import { ActionCreators, State } from "../../state";
+import { bindActionCreators } from "redux";
 
 const ControlsWrap = styled.div`
   display: flex;

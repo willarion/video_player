@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {BtnBackgroundImageProp} from "../../models/BtnBackgroundImageProp";
+import { BtnBackgroundImageProp } from "../../models/BtnBackgroundImageProp";
 
 export const Button = styled.button<BtnBackgroundImageProp>`
   width: 1.5rem;

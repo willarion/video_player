@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {RangeGradientProp} from "../../models/RangeGradientProps";
+import { RangeGradientProp } from "../../models/RangeGradientProps";
 
 const progressBarHeight = '10px';
 

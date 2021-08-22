@@ -1,12 +1,12 @@
 import React, { useRef } from 'react';
 import styled from "styled-components";
 import { Controls } from "../Controls/Controls";
-import { useDispatch } from "react-redux";
-import { ActionCreators } from "../../state";
+import { useDispatch, useSelector } from "react-redux";
+import { ActionCreators, State } from "../../state";
 import { bindActionCreators } from "redux";
 import { useMuteVideo } from "../../hooks/useMuteVideo";
 import { usePlayPauseStopVideo } from "../../hooks/usePlayPauseStopVideo";
-import {useVideoUrl} from "../../hooks/useVideoUrl";
+import { FsElementSafari } from "../../models/FsElementSafari";
 
 const VideoWrapper = styled.div`
   width: 60%;
@@ -30,16 +30,12 @@ const StyledVideo = styled.video`
   display: block;
 `
 
-interface Interface {
-  url: string
-}
-
-export const Video: React.FC<Interface> = ({url}) => {
+export const Video: React.FC = () => {
   const dispatch = useDispatch();
   const { measureDuration, rewindVideo } = bindActionCreators(ActionCreators, dispatch);
+  const state = useSelector((state: State) => state.settings);
 
   const vidRef = useRef<HTMLVideoElement>(null);
-
 
   const { muted, handleMuteState } = useMuteVideo();
   const { paused, handlePlayPauseVideo, handleStopVideo } = usePlayPauseStopVideo(vidRef);
@@ -72,16 +68,15 @@ export const Video: React.FC<Interface> = ({url}) => {
     if (vidRef.current) {
       if (vidRef.current.requestFullscreen) {
         vidRef.current.requestFullscreen();
-      } else {// @ts-ignore
-        if (vidRef.current.webkitRequestFullscreen) { /* Safari */
-          // @ts-ignore
-          vidRef.current.webkitRequestFullscreen();
+      } else { /* Safari */
+        const ref = vidRef.current as FsElementSafari;
+
+        if (ref.webkitRequestFullscreen) {
+          ref.webkitRequestFullscreen();
         }
       }
     }
   }
-
-  console.log(url)
 
   return (
     <VideoWrapper>
@@ -91,7 +86,7 @@ export const Video: React.FC<Interface> = ({url}) => {
         onLoadedData={handleDuration}
         muted={muted}
       >
-        <source src={url} type="video/mp4" />
+        <source src={state.src} type="video/mp4" />
         Your browser does not support HTML video.
       </StyledVideo>
       <Controls

@@ -1,15 +1,15 @@
 import React from "react";
 import styled from "styled-components";
-import {RangeGradientProp} from "../../models/RangeGradientProps";
-import {Button} from "../Button/Button";
+import { RangeGradientProp } from "../../models/RangeGradientProps";
+import { Button } from "../Button/Button";
 import mutedBtn from "../../images/mutedBtn.svg";
 import volumeBtn from "../../images/volumeBtn.svg";
-import {ControlsProps} from "../../models/ControlsProps";
-import {useDispatch, useSelector} from "react-redux";
-import {bindActionCreators} from "redux";
-import {ActionCreators, State} from "../../state";
-import {useBarColor} from "../../hooks/useBarColor";
-import {maxVolume} from "../../utils/constants/constants";
+import { ControlsProps } from "../../models/ControlsProps";
+import { useDispatch, useSelector } from "react-redux";
+import { bindActionCreators } from "redux";
+import { ActionCreators, State } from "../../state";
+import { useBarColor } from "../../hooks/useBarColor";
+import { maxVolume } from "../../utils/constants/constants";
 
 const StyledVolumeBlock = styled.div`
   display: flex;

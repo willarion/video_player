@@ -1,28 +1,15 @@
-import {Action} from "../actions";
-import {ActionType} from "../action-types";
-import {calculateMinSec} from "../../utils/calculateMinSec";
-
-interface State {
-  volume: number;
-  time: number;
-  duration: {
-    caption: string;
-    seconds: number
-  }
-}
-
-const initialState = {
-  volume: 1,
-  time: 0,
-  duration: {
-    caption: '00:00',
-    seconds: 0
-  }
-}
-
+import { Action } from "../actions";
+import { ActionType } from "../action-types";
+import { calculateMinSec } from "../../utils/calculateMinSec";
+import { initialState, State } from "../initial-state/initialState";
 
 export const videoSettingsReducer = (state: State = initialState, action: Action) => {
   switch (action.type) {
+    case ActionType.SET_SRC:
+      return {
+        ...state,
+        src: action.payload
+      }
     case ActionType.SET_VOLUME:
       return {
         ...state,

@@ -1,4 +1,5 @@
 export enum ActionType {
+  SET_SRC ='SET_SRC',
   SET_VOLUME = 'SET_VOLUME',
   SET_TIME_CAPTION = 'SET_TIME_CAPTION',
   REWIND = 'REWIND',

@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import {videoSettingsReducer} from "./videoSettingsReducer";
+import { videoSettingsReducer } from "./videoSettingsReducer";
 
 const reducers = combineReducers({
   settings: videoSettingsReducer

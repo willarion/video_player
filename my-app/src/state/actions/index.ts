@@ -1,4 +1,9 @@
-import {ActionType} from "../action-types";
+import { ActionType } from "../action-types";
+
+interface SetSrc {
+  type: ActionType.SET_SRC;
+  payload: string;
+}
 
 interface SetVolume {
   type: ActionType.SET_VOLUME;
@@ -15,4 +20,4 @@ interface SetDuration {
   payload: number
 }
 
-export type Action = SetVolume | Rewind | SetDuration;
+export type Action = SetSrc | SetVolume | Rewind | SetDuration;

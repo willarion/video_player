@@ -1,5 +1,5 @@
-import {useEffect, useState} from "react";
-import {calculateCurrentPercent} from "../utils/calculateCurrentPercent";
+import { useEffect, useState } from "react";
+import { calculateCurrentPercent } from "../utils/calculateCurrentPercent";
 
 export const useBarColor = (current: number, duration: number): number => {
   const [percent, setPercent] = useState(0);

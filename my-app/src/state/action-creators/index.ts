@@ -1,6 +1,15 @@
-import {Dispatch} from "redux";
-import {Action} from "../actions";
-import {ActionType} from "../action-types";
+import { Dispatch } from "redux";
+import { Action } from "../actions";
+import { ActionType } from "../action-types";
+
+export const setSrc = (url: string) => {
+  return (dispatch: Dispatch<Action>) => {
+    dispatch({
+      type: ActionType.SET_SRC,
+      payload: url
+    })
+  }
+}
 
 export const setVolume = (volume: number) => {
   return (dispatch: Dispatch<Action>) => {

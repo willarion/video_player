@@ -1,8 +1,8 @@
 import React from "react";
 import styled from "styled-components";
-import {useSelector} from "react-redux";
-import {State} from "../../state";
-import {calculateMinSec} from "../../utils/calculateMinSec";
+import { useSelector } from "react-redux";
+import { State } from "../../state";
+import { calculateMinSec } from "../../utils/calculateMinSec";
 
 const StyledTimeDisplay = styled.span`
   color: white;
