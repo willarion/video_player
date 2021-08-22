@@ -85,6 +85,7 @@ export const Video: React.FC = () => {
         onTimeUpdate={handleTime}
         onLoadedData={handleDuration}
         muted={muted}
+        onClick={handlePlayPauseVideo}
       >
         <source src={state.src} type="video/mp4" />
         Your browser does not support HTML video.
