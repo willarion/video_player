@@ -6,6 +6,7 @@ import { ActionCreators } from "../../state";
 import { bindActionCreators } from "redux";
 import { useMuteVideo } from "../../hooks/useMuteVideo";
 import { usePlayPauseStopVideo } from "../../hooks/usePlayPauseStopVideo";
+import {useVideoUrl} from "../../hooks/useVideoUrl";
 
 const VideoWrapper = styled.div`
   width: 60%;
@@ -29,11 +30,16 @@ const StyledVideo = styled.video`
   display: block;
 `
 
-export const Video: React.FC = () => {
+interface Interface {
+  url: string
+}
+
+export const Video: React.FC<Interface> = ({url}) => {
   const dispatch = useDispatch();
   const { measureDuration, rewindVideo } = bindActionCreators(ActionCreators, dispatch);
 
   const vidRef = useRef<HTMLVideoElement>(null);
+
 
   const { muted, handleMuteState } = useMuteVideo();
   const { paused, handlePlayPauseVideo, handleStopVideo } = usePlayPauseStopVideo(vidRef);
@@ -75,6 +81,8 @@ export const Video: React.FC = () => {
     }
   }
 
+  console.log(url)
+
   return (
     <VideoWrapper>
       <StyledVideo
@@ -83,7 +91,7 @@ export const Video: React.FC = () => {
         onLoadedData={handleDuration}
         muted={muted}
       >
-        <source src="https://s3-eu-west-1.amazonaws.com/onrewind-test-bucket/big_buck_bunny.mp4" type="video/mp4" />
+        <source src={url} type="video/mp4" />
         Your browser does not support HTML video.
       </StyledVideo>
       <Controls
