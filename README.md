@@ -1,4 +1,8 @@
-## Just custom video player made with react and react-redux
+# Just custom video player 
+made with react and react-redux
+
+### URL
+https://willarion.github.io/video_player/
 
 ### `npm start`
 
