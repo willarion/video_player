@@ -7,6 +7,7 @@ import { bindActionCreators } from "redux";
 import { useMuteVideo } from "../../hooks/useMuteVideo";
 import { usePlayPauseStopVideo } from "../../hooks/usePlayPauseStopVideo";
 import { FsElementSafari } from "../../models/FsElementSafari";
+import {FsDocumentSafari} from "../../models/FsDocumentSafari";
 
 const VideoWrapper = styled.div`
   width: 60%;
@@ -67,22 +68,43 @@ export const Video: React.FC = () => {
   }
 
   const handleFullscreen = (): void => {
-    if (wrapperRef.current) {
-      if (wrapperRef.current.requestFullscreen) {
-        wrapperRef.current.requestFullscreen();
-      } else { /* Safari */
-        const ref = wrapperRef.current as FsElementSafari;
+      const openFs = (videoWrapper: HTMLElement): void => {
+        if (videoWrapper.requestFullscreen) {
+          videoWrapper.requestFullscreen();
 
-        if (ref.webkitRequestFullscreen) {
-          ref.webkitRequestFullscreen();
+        } else { /* Safari */
+          const ref = videoWrapper as FsElementSafari;
+
+          if (ref.webkitRequestFullscreen) {
+            ref.webkitRequestFullscreen();
+          }
         }
+      }
+
+      const closeFs = (): void => {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+
+        } else { /* Safari */
+          const docSafari = document as FsDocumentSafari;
+
+          if (docSafari.webkitExitFullscreen) { /* Safari */
+            docSafari.webkitExitFullscreen();
+          }
+        }
+      }
+
+    if (wrapperRef.current && vidRef.current) {
+      if (document.fullscreenElement && document.fullscreenElement.id === 'wrapper') {
+        closeFs();
+      } else {
+        openFs(wrapperRef.current);
       }
     }
   }
-
+  
   return (
-    // <div ref={wrapperRef}>
-    <VideoWrapper ref={wrapperRef}>
+    <VideoWrapper id="wrapper" ref={wrapperRef}>
       <StyledVideo
         ref={vidRef}
         onTimeUpdate={handleTime}
@@ -104,6 +126,5 @@ export const Video: React.FC = () => {
         handleVideoRewind={handleVideoRewind}
       />
     </VideoWrapper>
-    // </div>
   )
 }
