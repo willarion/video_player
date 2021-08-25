@@ -27,6 +27,7 @@ const VideoWrapper = styled.div`
 
 const StyledVideo = styled.video`
   width: 100%;
+  height: calc(100% - 40px);
   display: block;
 `
 
@@ -36,6 +37,7 @@ export const Video: React.FC = () => {
   const state = useSelector((state: State) => state.settings);
 
   const vidRef = useRef<HTMLVideoElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   const { muted, handleMuteState } = useMuteVideo();
   const { paused, handlePlayPauseVideo, handleStopVideo } = usePlayPauseStopVideo(vidRef);
@@ -65,11 +67,11 @@ export const Video: React.FC = () => {
   }
 
   const handleFullscreen = (): void => {
-    if (vidRef.current) {
-      if (vidRef.current.requestFullscreen) {
-        vidRef.current.requestFullscreen();
+    if (wrapperRef.current) {
+      if (wrapperRef.current.requestFullscreen) {
+        wrapperRef.current.requestFullscreen();
       } else { /* Safari */
-        const ref = vidRef.current as FsElementSafari;
+        const ref = wrapperRef.current as FsElementSafari;
 
         if (ref.webkitRequestFullscreen) {
           ref.webkitRequestFullscreen();
@@ -79,7 +81,8 @@ export const Video: React.FC = () => {
   }
 
   return (
-    <VideoWrapper>
+    // <div ref={wrapperRef}>
+    <VideoWrapper ref={wrapperRef}>
       <StyledVideo
         ref={vidRef}
         onTimeUpdate={handleTime}
@@ -101,5 +104,6 @@ export const Video: React.FC = () => {
         handleVideoRewind={handleVideoRewind}
       />
     </VideoWrapper>
+    // </div>
   )
 }

@@ -19,6 +19,7 @@ import { bindActionCreators } from "redux";
 const ControlsWrap = styled.div`
   display: flex;
   flex-direction: column;
+  height: 40px;
 `
 
 export const Controls: React.FC<ControlsProps> = ({ handlePlayPause, handleStop, paused, handleFullscreen, handleMuteState, muted, handleVolume, handleVideoRewind }) => {
